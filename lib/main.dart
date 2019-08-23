@@ -16,9 +16,11 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
 
-  Map<String, double> currentLocation = new Map();
+//  Map<String, double> currentLocation = new Map();
+    LocationData currentLocation;
 
-  StreamSubscription<Map<String, double>> locationSubscription;
+
+  StreamSubscription<LocationData> locationSubscription;
 
   var location = new Location();
 
@@ -29,19 +31,17 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    currentLocation['latitude'] = 0.0;
-    currentLocation['longitude'] = 0.0;
 
     initPlatformState();
 
 //    locationSubscriptionA = location.onLocationChanged().listen(currentLocation) as StreamSubscription<Map<String, double>>;
 
-    locationSubscription = location.onLocationChanged().listen((var result) async {
+    locationSubscription = location.onLocationChanged().listen((LocationData result) {
 
       setState(() {
-        currentLocation =  result as Map<String, double>;
+        currentLocation =  result;
       });
-    }) as StreamSubscription<Map<String, double>>;
+    });
 
   }
 
@@ -56,7 +56,8 @@ class MyAppState extends State<MyApp> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Text('Lat/Lan: ${currentLocation['latitude']}/${currentLocation['longitude']}')
+              new Text('Lat/Lan: ${currentLocation.longitude}/${currentLocation.latitude}'),
+              new Text('Time: ${DateTime.fromMillisecondsSinceEpoch(currentLocation.time.toInt())} ')
             ],
           ),
         ),
@@ -69,7 +70,7 @@ class MyAppState extends State<MyApp> {
 
     var my_location;
     try{
-      my_location = (await location.getLocation()) as Map<String, double>;
+      my_location = (await location.getLocation());
       error = "";
 
     }on PlatformException catch(e) {
@@ -86,6 +87,3 @@ class MyAppState extends State<MyApp> {
   }
 
 }
-
-
-
