@@ -20,7 +20,7 @@ class MyAppState extends State<MyApp> {
 
   StreamSubscription<Map<String, double>> locationSubscription;
 
-  Location location = new Location();
+  var location = new Location();
 
   String error;
 
@@ -36,10 +36,10 @@ class MyAppState extends State<MyApp> {
 
 //    locationSubscriptionA = location.onLocationChanged().listen(currentLocation) as StreamSubscription<Map<String, double>>;
 
-    locationSubscription = location.onLocationChanged().listen((Map<String, double> result) async {
+    locationSubscription = location.onLocationChanged().listen((var result) async {
 
       setState(() {
-        currentLocation =  result;
+        currentLocation =  result as Map<String, double>;
       });
     }) as StreamSubscription<Map<String, double>>;
 
@@ -67,7 +67,7 @@ class MyAppState extends State<MyApp> {
 
   void initPlatformState() async {
 
-    Map<String, double> my_location;
+    var my_location;
     try{
       my_location = (await location.getLocation()) as Map<String, double>;
       error = "";
