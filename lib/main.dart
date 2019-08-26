@@ -9,16 +9,13 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => MyAppState();
 }
 
 class MyAppState extends State<MyApp> {
-
 //  Map<String, double> currentLocation = new Map();
-    LocationData currentLocation;
-
+  LocationData currentLocation;
 
   StreamSubscription<LocationData> locationSubscription;
 
@@ -26,23 +23,20 @@ class MyAppState extends State<MyApp> {
 
   String error;
 
-
   @override
   void initState() {
     super.initState();
-
 
     initPlatformState();
 
 //    locationSubscriptionA = location.onLocationChanged().listen(currentLocation) as StreamSubscription<Map<String, double>>;
 
-    locationSubscription = location.onLocationChanged().listen((LocationData result) {
-
+    locationSubscription =
+        location.onLocationChanged().listen((LocationData result) {
       setState(() {
-        currentLocation =  result;
+        currentLocation = result;
       });
     });
-
   }
 
   @override
@@ -56,34 +50,32 @@ class MyAppState extends State<MyApp> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Text('Lat/Lan: ${currentLocation.longitude}/${currentLocation.latitude}'),
-              new Text('Time: ${DateTime.fromMillisecondsSinceEpoch(currentLocation.time.toInt())} ')
+              new Text(currentLocation.longitude == null
+                  ? 'Fetching data...'
+                  : 'Lat/Lan: ${currentLocation.longitude}/${currentLocation.latitude}'),
+              new Text(
+                  'Time: ${DateTime.fromMillisecondsSinceEpoch(currentLocation.time.toInt())} ')
             ],
           ),
         ),
       ),
     );
-
   }
 
   void initPlatformState() async {
-
     var my_location;
-    try{
+    try {
       my_location = (await location.getLocation());
       error = "";
-
-    }on PlatformException catch(e) {
-      if(e.code == 'PERMISSION_DENIED')
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED')
         error = 'Permission Denied';
-      else if(e.code == 'PERMISSION_DENIED_NEVER_ASK')
+      else if (e.code == 'PERMISSION_DENIED_NEVER_ASK')
         error = 'Permission denied- ask user to enable it from settings';
-      my_location =null;
+      my_location = null;
     }
     setState(() {
       currentLocation = my_location;
     });
-
   }
-
 }
